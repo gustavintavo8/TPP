@@ -1,0 +1,71 @@
+(require racket/function mzlib/compat)
+;;Ejercicio 1
+
+
+
+(define (toOneList s-expr)
+  (cond
+    ;Caso Base
+    ((null? s-expr) '())
+    ((
+
+
+
+
+
+
+
+
+(displayln "ejercicio 1")
+(toOneList '((1 2) (3 (4 5)) 6))
+(toOneList '((())(3 (4 ((8)) 5)) (6 "a" 6)))
+(toOneList '( (("H" #t -inf.0) () ((5)) ("e" #f pi)) "e"))
+(toOneList '())
+(toOneList '(()()()))
+;;Ejercicio2
+
+
+(displayln "ejercicio 2")
+  (my-apply '(1 2 3 4) + 20)
+  (my-apply '(1 2 3 4) max 0)
+  (my-apply '("HELLOW" " WORLD" "!!") string-append "")
+(my-apply '() 'ANYTHING 'seed)
+;;Ejercicio 2 segunda parte
+
+(displayln "ejercicio 2 A")
+(my-apply1 '("hola" "hi" "hey") max string-length -inf.0)
+(my-apply1 '("a" "b" "a" "c" "d" "a") + (lambda(x) (if [equal? "a" x] 1 0)) 0)
+;ejercicio3
+
+;3a
+(displayln "Ejercicio 3A")
+
+
+(define vectors '((1 2 2 #t) (1 1 'a 1 1) ("hey" 2) (0 0 0 0 )))
+(displayln "Ejercicio 3b")
+
+
+
+  ;3c
+ (define vectors '((1 2 2) (1 1 1 1 ) (0 0 0 0 0 1) (0) (2) (0 0) (0 0 0 0)))
+ (displayln "Ejercicio 3c")
+
+
+;4A
+ (displayln "4A")
+
+ (define vectors '((1 2 2 ) (1 1 1 1 ) (2) (0 0 0 0)))
+ 
+ 
+ ;con curry
+ (displayln "curry a la funcion piotencia")
+ 
+  ;compose
+  
+  ;
+ ;4B
+(define vectors '((1 2 2 #t) (1 1 'a 1 1) ("hey" 2) (0 0 0 0 )))
+(displayln "4B")
+
+;sin funcion auxiliar
+

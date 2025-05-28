@@ -1,0 +1,126 @@
+(require mzlib/compat racket/function)
+
+;; Ejercicio 1
+;; ===========
+
+;; La función primeros(n, l) retorna una lista con los n primeros elementos de
+;; la lista l
+(define (primeros n l)
+  (if (= n 0)
+      ()
+      (cons (car l)
+            (primeros (- n 1) (cdr l)))))
+
+
+(define (primeros-alt n l)
+  (cond
+    ((not (integer? n)) (error 'primeros-alt "El primer argumento debe ser un número entero"))
+    ((not (list? l)) (error 'primeros-alt "El segundo argumento debe ser una lista"))
+    ((not (= (length (list n l)) 2)) (error 'primeros-alt "La función debe tener exactamente 2 argumentos"))
+    ((= n 0) '())
+    (else (cons (car l) (primeros-alt (- n 1) (cdr l))))))
+
+
+(display "\nprimeros-al(4, (a (b c) d e (f g))): ")
+;(primeros-alt '(a (b c) d e (f g)))
+;(primeros-alt 3.5 '(a (b c) d e (f g))) 
+;(primeros-alt 4 '(a b c d . e))
+;(primeros-alt 7 '(a (b c) d e (f g)))
+(primeros-alt 4 '(a (b c) d e (f g)))
+
+;; Ejercicio 2
+;; ===========
+
+;; Cartones de juego del bingo. Cada cartón tiene 15 números enteros distintos del
+;; rango [1, 90]
+(define Cartones-Bingo
+  '((ana     55 74 31 12 26 66 72 10 44 70 62 73 50 24 84)
+    (luis    74 71 80 22 48 45 46 36  6 73 23 37 60 51 47)
+    (carmen  26 18 57 66 73 72 14 68 82 21 25 62  6 19 49)
+    (juan    38 41 59 57 77 68 31 86 54 60 82 73 24 87 18)
+    (rosa    83 36 50  4 39 30  6 18 21 90 12  9 25 53 58)
+    (carlos  17 28  3 46 25 51 32 83 11 52 88 90 37 13 58)
+    (eva     73 12  2 49 47 31  4 57 25 40 89 46 87  3 90)
+    (jose    75 79 37 46 64 21 51 36 15 72 82  7 57 68 49)
+    (pablo   38 62 20 76 30 39 52 40 25 80 63 64 81 32 17)))
+
+;; Números-Bingo es una secuencia aleatoria de todos los números enteros del rango [1, 90]. 
+;; Estos se cantarán, uno a uno, durante el juego hasta que alguno de los cartones en juego
+;; se complete.
+(define Números-Bingo
+  '(54 65 88 69 86 85 75 4 78 56 27 77 16 33 89 29 8 34 41 30 11 9 53 90 72 32 71 57 76 38
+    7 73 52 12 44 1 22 62 3 81 49 68 70 23 19 64 40 50 84 87 15 13 61 39 21 6 37 63 80 26
+    55 36 67 60 14 47 35 24 66 58 18 20 5 83 45 42 51 59 46 48 25 82 31 10 28 74 2 17 43 79))
+
+;; a.
+
+(define (restantes numeros cartones)
+  (filter (lambda (x) (not (member x cartones))) numeros))
+
+
+(displayln "\nrestantes(primeros(30, Números-Bingo), car(Cartones-Bingo)):")
+(restantes (primeros 30 Números-Bingo) (car Cartones-Bingo))
+
+;; b.
+
+(define (foto-partida cartones numeros)
+  (map (lambda (x) (cons (car x) (restantes (cdr x) numeros))) cartones))
+
+(displayln "\nfoto-partida(Cartones-Bingo, (primeros 30 Números-Bingo)):")
+(foto-partida Cartones-Bingo (primeros 30 Números-Bingo))
+
+;; c.
+
+(define (numeros-restantes cartones numeros-cantados)
+  (map (lambda (carton)
+         (list (car carton)
+               (- 15 (length (restantes (cdr carton) numeros-cantados)))))
+       cartones))
+
+(displayln "\nCantidad de números restantes por jugador tras haberse cantado 20 números:")
+(numeros-restantes Cartones-Bingo (primeros 20 Números-Bingo))
+
+
+;; Ejercicio 3
+;; ===========
+
+(define (sin-repeticiones l)
+  (cond
+    ((null? l) '()) ; Caso base: si la lista está vacía, devuelve una lista vacía
+    ((list? (car l)) ; Si el primer elemento es una lista, aplica sin-repeticiones a esa lista
+     (cons (sin-repeticiones (car l)) (sin-repeticiones (cdr l))))
+    ((member (car l) (cdr l)) ; Si el primer elemento está repetido, elimínalo
+     (sin-repeticiones (cdr l)))
+    (else ; Si no está repetido, consérvalo y continúa con el resto de la lista
+     (cons (car l) (sin-repeticiones (cdr l))))))
+
+
+(display "\nsin-repeticiones((d (c d) (c d) a (c d) d a a b)): ")
+(sin-repeticiones '(d (c d) (c d) a (c d) d a a b))
+
+;; Ejercicio 4
+;; ===========
+
+;; a.
+
+(define (bingo-jugador numeros-cantados carton)
+  (null? (restantes (cdr carton) numeros-cantados)))
+
+
+(display "\nbingo-jugador(Números-Bingo,car(Cartones-Bingo)): ")
+(bingo-jugador Números-Bingo (car Cartones-Bingo))
+
+;; b.
+
+
+;(displayln "\nCantidad de números que requiere cada jugador para cantar bingo:")
+;=> ((ana 86) (luis 86) (carmen 82) (juan 83) (rosa 81) (carlos 88) (eva 87) (jose 90) (pablo 88))
+;(define Bingo-Jugadores
+; (bingo-jugadores Cartones-Bingo Números-Bingo))
+;Bingo-Jugadores
+
+;; c.
+;(display "\nJugadores que cantarán bingo y cantidad de números cantados: ")
+
+
+;(displayln "\nFoto de la partida a su conclusión:")
